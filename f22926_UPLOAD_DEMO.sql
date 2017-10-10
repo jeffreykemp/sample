@@ -27,7 +27,7 @@ prompt APPLICATION 22926 - File Upload Demo
 -- Application Export:
 --   Application:     22926
 --   Name:            File Upload Demo
---   Date and Time:   03:31 Tuesday October 10, 2017
+--   Date and Time:   13:42 Tuesday October 10, 2017
 --   Exported By:     JEFFREY.KEMP@JK64.COM
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -37,8 +37,8 @@ prompt APPLICATION 22926 - File Upload Demo
 
 -- Application Statistics:
 --   Pages:                      3
---     Items:                    6
---     Processes:                4
+--     Items:                   10
+--     Processes:                5
 --     Regions:                  8
 --     Buttons:                  2
 --     Dynamic Actions:          1
@@ -108,7 +108,7 @@ wwv_flow_api.create_flow(
 ,p_rejoin_existing_sessions=>'N'
 ,p_csv_encoding=>'Y'
 ,p_last_updated_by=>'JEFFREY.KEMP@JK64.COM'
-,p_last_upd_yyyymmddhh24miss=>'20171010032719'
+,p_last_upd_yyyymmddhh24miss=>'20171010134045'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_ui_type_name => null
 );
@@ -16747,7 +16747,7 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'Y'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'JEFFREY.KEMP@JK64.COM'
-,p_last_upd_yyyymmddhh24miss=>'20171010032719'
+,p_last_upd_yyyymmddhh24miss=>'20171010134045'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(18078136764437016509)
@@ -16933,7 +16933,7 @@ wwv_flow_api.create_page_item(
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(18078136954500016511)
 ,p_name=>'P1_FILE2'
-,p_item_sequence=>20
+,p_item_sequence=>40
 ,p_item_plug_id=>wwv_flow_api.id(18078136764437016509)
 ,p_prompt=>'File (multiple, any type)'
 ,p_display_as=>'NATIVE_FILE'
@@ -16948,7 +16948,7 @@ wwv_flow_api.create_page_item(
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(18078137090515016512)
 ,p_name=>'P1_FILE3'
-,p_item_sequence=>30
+,p_item_sequence=>70
 ,p_item_plug_id=>wwv_flow_api.id(18078136764437016509)
 ,p_prompt=>'File (single image)'
 ,p_display_as=>'NATIVE_FILE'
@@ -16964,7 +16964,7 @@ wwv_flow_api.create_page_item(
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(18078137197782016513)
 ,p_name=>'P1_FILE4'
-,p_item_sequence=>40
+,p_item_sequence=>100
 ,p_item_plug_id=>wwv_flow_api.id(18078136764437016509)
 ,p_prompt=>'File (multiple images)'
 ,p_display_as=>'NATIVE_FILE'
@@ -16976,6 +16976,81 @@ wwv_flow_api.create_page_item(
 ,p_attribute_09=>'SESSION'
 ,p_attribute_10=>'Y'
 ,p_attribute_11=>'image/*'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(45594566520596136430)
+,p_name=>'P1_VALUE1'
+,p_item_sequence=>20
+,p_item_plug_id=>wwv_flow_api.id(18078136764437016509)
+,p_prompt=>'P1_FILE1'
+,p_display_as=>'NATIVE_DISPLAY_ONLY'
+,p_display_when=>'P1_VALUE1'
+,p_display_when_type=>'ITEM_IS_NOT_NULL'
+,p_field_template=>wwv_flow_api.id(28999312525775490593)
+,p_item_template_options=>'#DEFAULT#'
+,p_attribute_01=>'N'
+,p_attribute_02=>'VALUE'
+,p_attribute_04=>'Y'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(45594566644092136431)
+,p_name=>'P1_VALUE2'
+,p_item_sequence=>50
+,p_item_plug_id=>wwv_flow_api.id(18078136764437016509)
+,p_prompt=>'P1_FILE2'
+,p_display_as=>'NATIVE_DISPLAY_ONLY'
+,p_display_when=>'P1_VALUE2'
+,p_display_when_type=>'ITEM_IS_NOT_NULL'
+,p_field_template=>wwv_flow_api.id(28999312525775490593)
+,p_item_template_options=>'#DEFAULT#'
+,p_attribute_01=>'N'
+,p_attribute_02=>'VALUE'
+,p_attribute_04=>'Y'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(45594566768981136432)
+,p_name=>'P1_VALUE3'
+,p_item_sequence=>80
+,p_item_plug_id=>wwv_flow_api.id(18078136764437016509)
+,p_prompt=>'P1_FILE3'
+,p_display_as=>'NATIVE_DISPLAY_ONLY'
+,p_display_when=>'P1_VALUE3'
+,p_display_when_type=>'ITEM_IS_NOT_NULL'
+,p_field_template=>wwv_flow_api.id(28999312525775490593)
+,p_item_template_options=>'#DEFAULT#'
+,p_attribute_01=>'N'
+,p_attribute_02=>'VALUE'
+,p_attribute_04=>'Y'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(45594566884301136433)
+,p_name=>'P1_VALUE4'
+,p_item_sequence=>110
+,p_item_plug_id=>wwv_flow_api.id(18078136764437016509)
+,p_prompt=>'P1_FILE4'
+,p_display_as=>'NATIVE_DISPLAY_ONLY'
+,p_display_when=>'P1_VALUE4'
+,p_display_when_type=>'ITEM_IS_NOT_NULL'
+,p_field_template=>wwv_flow_api.id(28999312525775490593)
+,p_item_template_options=>'#DEFAULT#'
+,p_attribute_01=>'N'
+,p_attribute_02=>'VALUE'
+,p_attribute_04=>'Y'
+);
+wwv_flow_api.create_page_process(
+ p_id=>wwv_flow_api.id(45594567774661136442)
+,p_process_sequence=>10
+,p_process_point=>'AFTER_SUBMIT'
+,p_process_type=>'NATIVE_PLSQL'
+,p_process_name=>'set values'
+,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
+':P1_VALUE1 := :P1_FILE1;',
+':P1_VALUE2 := :P1_FILE2;',
+':P1_VALUE3 := :P1_FILE3;',
+':P1_VALUE4 := :P1_FILE4;'))
+,p_process_error_message=>'#SQLERRM_TEXT#'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+,p_process_success_message=>'Upload complete.'
 );
 end;
 /
