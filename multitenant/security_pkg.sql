@@ -1,5 +1,7 @@
 create or replace package security_pkg is
 
+C_CTX constant varchar2(30) := 'CTX';
+
 procedure init
   (app_user          in varchar2 := null
   ,security_group_id in security_groups.security_group_id%type := null
