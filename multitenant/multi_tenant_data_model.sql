@@ -46,5 +46,3 @@ insert into security_role values ('VIEW','View','Y');
 insert into security_group values (security_group_id_seq.nextval,'jk64');
 insert into security_group_member values (security_group_id_seq.currval,'JEFF',null,'Y');
 insert into security_group_role values (security_group_id_seq.currval,'JEFF','ADMIN','Y');
-
-create context ctx using jk64.security_pkg accessed globally;
