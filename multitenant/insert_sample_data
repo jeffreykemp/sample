@@ -1,0 +1,6 @@
+insert into security_roles values ('ADMIN','Admin','Y');
+insert into security_roles values ('EDITOR','Editor','Y');
+insert into security_roles values ('READONLY','Readonly','Y');
+insert into security_groups values (security_group_id_seq.nextval,'jk64');
+insert into security_group_members values (security_group_id_seq.currval,'JEFF',null,'Y');
+insert into security_group_roles values (security_group_id_seq.currval,'JEFF','ADMIN','Y');
