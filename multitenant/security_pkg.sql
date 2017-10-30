@@ -1,16 +1,14 @@
 create or replace package security_pkg is
 
-C_CTX constant varchar2(30) := 'CTX';
-
 procedure init
   (app_user          in varchar2 := null
-  ,security_group_id in number := null
+  ,security_group_id in security_groups.security_group_id%type := null
   ,apex              in boolean := true
   );
 
-function user_has_role (role_code in varchar2) return boolean;
+function user_has_role (role_code in security_roles.role_code%type) return boolean;
 
-procedure validate (security_group_id in number);
+procedure validate (security_group_id in security_groups.security_group_id%type);
 
 procedure reset;
 
@@ -51,16 +49,16 @@ end sctx;
 -- called after authentication to set up a session
 procedure init
   (app_user          in varchar2 := null
-  ,security_group_id in number := null
+  ,security_group_id in security_groups.security_group_id%type := null
   ,apex              in boolean := true
   ) is
   cursor c
-    (security_group_id in security_group_member.security_group_id%type
-    ,app_user          in security_group_member.app_user%type
+    (security_group_id in security_groups.security_group_id%type
+    ,app_user          in security_group_members.app_user%type
     ) is
     select x.*
-    from   security_group_member x
-    join   security_group g
+    from   security_group_members x
+    join   security_groups g
     on     g.security_group_id = x.security_group_id
     where  x.app_user = c.app_user
     and    (x.security_group_id = c.security_group_id
@@ -83,7 +81,7 @@ begin
   if apex
   and r.app_user is not null
   and r.security_group_id is not null then
-    update security_group_member m
+    update security_group_members m
     set    last_login = sysdate
     where  m.security_group_id = r.security_group_id
     and    m.app_user = r.app_user;
@@ -92,12 +90,12 @@ begin
 end init;
 
 -- used by authorization schemes
-function user_has_role (role_code in varchar2) return boolean is
+function user_has_role (role_code in security_roles.role_code%type) return boolean is
   dummy number;
 begin
   select 1 into dummy
-  from   security_group_role r
-  join   security_role sr on sr.role_code = r.role_code
+  from   security_group_roles r
+  join   security_roles sr on sr.role_code = r.role_code
   where  r.security_group_id = sys_context(C_CTX,C_SECURITY_GROUP_ID)
   and    r.app_user = sys_context(C_CTX,C_APP_USER)
   and    r.role_code in (user_has_role.role_code,C_ADMIN)
@@ -111,7 +109,7 @@ exception
 end user_has_role;
 
 -- used by table triggers to stop unauthorised modifications
-procedure validate (security_group_id in number) is
+procedure validate (security_group_id in security_groups.security_group_id%type) is
 begin
   if sys_context(C_CTX,C_SECURITY_GROUP_ID) is null then
     raise_application_error(-20128,
