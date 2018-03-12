@@ -1,6 +1,6 @@
 prompt check_table_for_owm.sql
 
-prompt Report any column names that are too long
+prompt Report any table or column names that are too long
 select table_name, column_name
 from user_tab_columns
 where table_name = :TABLE_NAME
