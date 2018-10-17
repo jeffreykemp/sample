@@ -320,40 +320,11 @@ create or replace package body xlsx_parser is
     end parse;
 
     --==================================================================================================================
--- -- version using apex_zip (for APEX 5.0)
---    function get_worksheets(
---        p_xlsx_content   in blob     default null, 
---        p_xlsx_name      in varchar2 default null ) return t_array_varchar2 /*apex_t_varchar2*/ pipelined 
---    is
---        l_zip_files           apex_zip.t_files;
---        l_xlsx_content        blob;
---    begin
---        if p_xlsx_content is null then
---            get_blob_content( p_xlsx_name, l_xlsx_content );
---        else
---            l_xlsx_content := p_xlsx_content;
---        end if;
---
---        l_zip_files := apex_zip.get_files(
---            p_zipped_blob => l_xlsx_content );
---
---        for i in 1 .. l_zip_files.count loop
---            if substr( l_zip_files( i ), 1, length( g_worksheets_path_prefix ) ) = g_worksheets_path_prefix
---            and substr(l_zip_files(i), -4, 4) = '.xml' -- [jk] omit the ".rels" files
---            then
---                pipe row( rtrim( substr( l_zip_files ( i ), length( g_worksheets_path_prefix ) + 1 ), '.xml' ) );
---            end if;
---        end loop;
---
---        return;
---    end get_worksheets;
-
--- version using zip_util_pkg (for pre-APEX 5.0)
     function get_worksheets(
         p_xlsx_content   in blob     default null, 
         p_xlsx_name      in varchar2 default null ) return t_array_varchar2 /*apex_t_varchar2*/ pipelined 
     is
-        l_zip_files           zip_util_pkg.t_file_list;
+        l_zip_files           zip_util_pkg.t_file_list /*apex_zip.t_files*/;
         l_xlsx_content        blob;
     begin
         if p_xlsx_content is null then
@@ -362,7 +333,7 @@ create or replace package body xlsx_parser is
             l_xlsx_content := p_xlsx_content;
         end if;
     
-        l_zip_files := zip_util_pkg.get_file_list(
+        l_zip_files := zip_util_pkg.get_file_list /*apex_zip.get_files*/(
             p_zipped_blob => l_xlsx_content );
 
         for i in 1 .. l_zip_files.count loop
