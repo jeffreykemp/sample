@@ -1,2 +1,2 @@
 # sample
-Random sample code and examples
+Various sample code, examples and utilities
