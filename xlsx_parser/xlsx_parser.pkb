@@ -77,7 +77,7 @@ create or replace package body xlsx_parser is
               '//si'
               passing xmltype.createxml( l_shared_strings, nls_charset_id('AL32UTF8'), null )
               columns
-                 shared_string varchar2(4000)   path 't/text()' );
+                 shared_string varchar2(4000)   path 'string-join(//t/text()," ")' );
 
     end extract_shared_strings;
 
