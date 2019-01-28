@@ -16,8 +16,7 @@ apex.debug("records=" + model.getTotalRecords());
 ```
 model.forEach(function(r) {
   model.setValue(r,'LINE_AMT',amt);
-  });
-}
+});
 ```
 
 ## Get the first row in a grid
