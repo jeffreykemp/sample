@@ -1,16 +1,19 @@
-## Get the number of rows in a grid
+## Get the model from an interactive grid
 
 ```
 var widget = apex.region('transaction_lines').widget();
 var model = widget.interactiveGrid('getViews','grid').model;
-apex.debug("records="+model.getTotalRecords());
+```
+
+## Get the number of rows in a grid
+
+```
+apex.debug("records=" + model.getTotalRecords());
 ```
 
 ## Copy a value to each row in a grid
 
 ```
-var widget = apex.region('transaction_lines').widget();
-var model = widget.interactiveGrid('getViews','grid').model;
 model.forEach(function(r) {
   model.setValue(r,'LINE_AMT',amt);
   });
@@ -20,8 +23,6 @@ model.forEach(function(r) {
 ## Get the first row in a grid
 
 ```
-var widget = apex.region('transaction_lines').widget();
-var model = widget.interactiveGrid('getViews','grid').model;
 var rec = model.recordAt(0);
 ```
 
@@ -30,8 +31,6 @@ var rec = model.recordAt(0);
 ```
 var arr = JSON.parse($v("P1_JSON"));
 if (arr.length > 0) {
-    var widget      = apex.region('transaction_lines').widget();
-    var model       = widget.interactiveGrid('getViews','grid').model;
     var myNewRecord;
     model.clearData();
     for(i=0; i<arr.length; i++) {
