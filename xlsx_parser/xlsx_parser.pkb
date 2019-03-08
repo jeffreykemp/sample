@@ -77,7 +77,7 @@ create or replace package body xlsx_parser is
               '//si'
               passing xmltype.createxml( l_shared_strings, nls_charset_id('AL32UTF8'), null )
               columns
-                 shared_string varchar2(4000)   path 'string-join(//t/text()," ")' );
+                 shared_string varchar2(4000) path 'string-join(//t/text()," ")' );
 
     end extract_shared_strings;
 
@@ -347,6 +347,58 @@ create or replace package body xlsx_parser is
         return;
     end get_worksheets;
 
+    function get_worksheet_names(
+        p_xlsx_name      in varchar2 default null,
+        p_xlsx_content   in blob     default null
+        ) return xlsx_sheet_tab_t pipelined
+    is
+        l_xlsx_content  blob;
+        l_workbook      blob;
+        l_sheet         xlsx_sheet_t;
+
+    begin
+        if p_xlsx_content is null then
+            get_blob_content( p_xlsx_name, l_xlsx_content );
+        else
+            l_xlsx_content := p_xlsx_content;
+        end if;
+
+        if l_xlsx_content is null then
+            return;
+        end if;
+
+        l_workbook := zip_util_pkg.get_file /*APEX 5.0: apex_zip.get_file_content*/
+          (p_zipped_blob => l_xlsx_content
+          ,p_file_name   => 'xl/workbook.xml' );
+
+        if l_workbook is null then
+            return;
+        end if;
+
+        for r in (
+          select r_id, sheet_name
+            from xmltable(
+                xmlnamespaces( default 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+                  'http://schemas.openxmlformats.org/officeDocument/2006/relationships' as "r"),
+                '/workbook/sheets/sheet'
+                passing xmltype.createxml( l_workbook, nls_charset_id('AL32UTF8'), null )
+                columns
+                   r_id        varchar2(100)    path '@r:id'
+                  ,sheet_name  varchar2(4000)   path '@name' )
+          ) loop
+          
+          -- r.r_id will be something like 'rId5' which corresponds to "sheet5.xml"
+          
+          l_sheet.worksheet  := case when r.r_id like 'rId%' then 'sheet' || substr(r.r_id,4) else r.r_id end;
+          l_sheet.sheet_name := r.sheet_name;
+
+          pipe row (l_sheet);
+          
+        end loop;
+
+        return;
+    end get_worksheet_names;
+        
 end xlsx_parser;
 /
 sho err

@@ -24,6 +24,12 @@ create or replace package xlsx_parser is
         col46 varchar2(4000), col47 varchar2(4000), col48 varchar2(4000), col49 varchar2(4000), col50 varchar2(4000));
 
     type xlsx_tab_t is table of xlsx_row_t;
+    
+    type xlsx_sheet_t is record(
+      worksheet  varchar2(255),
+      sheet_name varchar2(4000));
+    
+    type xlsx_sheet_tab_t is table of xlsx_sheet_t;
 
     --==================================================================================================================
     -- table function parses the XLSX file and returns the first 15 columns.
@@ -72,6 +78,22 @@ create or replace package xlsx_parser is
     --
     function get_date( p_xlsx_date_number in number ) return date;
 
+    --==================================================================================================================
+    -- get worksheet names (titles) as shown in the spreadsheet
+    --
+    -- p_xlsx_name    - NAME column of the APEX_APPLICATION_TEMP_FILES table
+    -- p_xlsx_content - XLSX as a BLOB
+    -- 
+    -- usage:
+    --
+    -- select * from table( 
+    --    xlsx_parser.get_worksheet_names( 
+    --        p_xlsx_name      => :P1_XLSX_FILE ) );
+    --
+    function get_worksheet_names(
+            p_xlsx_name      in varchar2 default null,
+            p_xlsx_content   in blob     default null
+            ) return xlsx_sheet_tab_t pipelined;
+
 end xlsx_parser;
 /
-show err
