@@ -21,12 +21,12 @@ wwv_flow_api.import_begin (
 );
 end;
 /
-prompt --application/shared_components/plugins/dynamic_action/doe_da_show_item_required
+prompt --application/shared_components/plugins/dynamic_action/jk64_da_show_item_required
 begin
 wwv_flow_api.create_plugin(
  p_id=>wwv_flow_api.id(6642480543261168)
 ,p_plugin_type=>'DYNAMIC ACTION'
-,p_name=>'DOE.DA_SHOW_ITEM_REQUIRED'
+,p_name=>'JK64.DA_SHOW_ITEM_REQUIRED'
 ,p_display_name=>'Show Item as Required'
 ,p_category=>'STYLE'
 ,p_supported_ui_types=>'DESKTOP'
