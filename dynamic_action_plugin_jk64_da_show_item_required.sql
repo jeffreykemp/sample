@@ -6,25 +6,25 @@ whenever sqlerror exit sql.sqlcode rollback
 -- ORACLE Application Express (APEX) export file
 --
 -- You should run the script connected to SQL*Plus as the Oracle user
--- APEX_190100 or as the owner (parsing schema) of the application.
+-- APEX_180200 or as the owner (parsing schema) of the application.
 --
 -- NOTE: Calls to apex_application_install override the defaults below.
 --
 --------------------------------------------------------------------------------
 begin
 wwv_flow_api.import_begin (
- p_version_yyyy_mm_dd=>'2019.03.31'
-,p_release=>'19.1.0.00.15'
-,p_default_workspace_id=>2300357799442810
-,p_default_application_id=>300
-,p_default_owner=>'SCBM'
+ p_version_yyyy_mm_dd=>'2018.05.24'
+,p_release=>'18.2.0.00.12'
+,p_default_workspace_id=>20749515040658038
+,p_default_application_id=>10500
+,p_default_owner=>'SAMPLE'
 );
 end;
 /
 prompt --application/shared_components/plugins/dynamic_action/jk64_da_show_item_required
 begin
 wwv_flow_api.create_plugin(
- p_id=>wwv_flow_api.id(13294579433830012)
+ p_id=>wwv_flow_api.id(36152167620337362)
 ,p_plugin_type=>'DYNAMIC ACTION'
 ,p_name=>'JK64.DA_SHOW_ITEM_REQUIRED'
 ,p_display_name=>'Show Item as Required'
@@ -38,13 +38,13 @@ wwv_flow_api.create_plugin(
 '  l_result                apex_plugin.t_dynamic_action_render_result;',
 '  l_set_value_required_yn p_dynamic_action.attribute_01%type := p_dynamic_action.attribute_01;',
 'begin',
-'  ',
+'',
 '  if apex_application.g_debug then',
 '    apex_plugin_util.debug_dynamic_action',
 '      (p_plugin         => p_plugin',
 '      ,p_dynamic_action => p_dynamic_action);',
 '  end if;',
-'  ',
+'',
 '  l_result.javascript_function := replace(q''[function() {',
 '',
 '    $.each(this.affectedElements, (i, element) => {',
@@ -57,24 +57,25 @@ wwv_flow_api.create_plugin(
 '',
 '  }]''',
 '  ,''%SET_VALUE_REQUIRED%'', case when l_set_value_required_yn=''Y'' then q''[$(element).prop("required",true);]'' end);',
-'  ',
+'',
 '  return l_result;',
 'end render;'))
 ,p_api_version=>2
 ,p_render_function=>'render'
-,p_standard_attributes=>'ITEM:JQUERY_SELECTOR:JAVASCRIPT_EXPRESSION:TRIGGERING_ELEMENT:ONLOAD'
+,p_standard_attributes=>'ITEM:JQUERY_SELECTOR:JAVASCRIPT_EXPRESSION:TRIGGERING_ELEMENT:REQUIRED'
 ,p_substitute_attributes=>true
 ,p_subscribe_plugin_settings=>true
 ,p_help_text=>'For APEX Universal Theme. Dynamic Action to show one or more items as Required. Put a condition on the parent Dynamic Action event to make it conditional.'
 ,p_version_identifier=>'0.1'
+,p_about_url=>'https://jeffkemponoracle.com/2019/07/conditionally-required-floating-item/'
 );
 wwv_flow_api.create_plugin_attribute(
- p_id=>wwv_flow_api.id(13296135964933908)
-,p_plugin_id=>wwv_flow_api.id(13294579433830012)
+ p_id=>wwv_flow_api.id(36152300633340411)
+,p_plugin_id=>wwv_flow_api.id(36152167620337362)
 ,p_attribute_scope=>'COMPONENT'
 ,p_attribute_sequence=>1
 ,p_display_sequence=>10
-,p_prompt=>'Set Value Required = True'
+,p_prompt=>'Set Value Required = Yes'
 ,p_attribute_type=>'CHECKBOX'
 ,p_is_required=>false
 ,p_default_value=>'N'
