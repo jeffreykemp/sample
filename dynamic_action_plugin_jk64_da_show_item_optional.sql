@@ -21,13 +21,13 @@ wwv_flow_api.import_begin (
 );
 end;
 /
-prompt --application/shared_components/plugins/dynamic_action/jk64_da_show_item_required
+prompt --application/shared_components/plugins/dynamic_action/jk64_da_show_item_optional
 begin
 wwv_flow_api.create_plugin(
- p_id=>wwv_flow_api.id(13294579433830012)
+ p_id=>wwv_flow_api.id(6652600606583785)
 ,p_plugin_type=>'DYNAMIC ACTION'
-,p_name=>'JK64.DA_SHOW_ITEM_REQUIRED'
-,p_display_name=>'Show Item as Required'
+,p_name=>'JK64.DA_SHOW_ITEM_OPTIONAL'
+,p_display_name=>'Show Item as Optional'
 ,p_category=>'STYLE'
 ,p_supported_ui_types=>'DESKTOP'
 ,p_plsql_code=>wwv_flow_string.join(wwv_flow_t_varchar2(
@@ -50,13 +50,13 @@ wwv_flow_api.create_plugin(
 '    $.each(this.affectedElements, (i, element) => {',
 '      var itemId = $(element).attr("id");',
 '      apex.debug("show as required",itemId);',
-'      $("#"+itemId+"_CONTAINER").addClass("is-required");',
+'      $("#"+itemId+"_CONTAINER").removeClass("is-required");',
 '      %SET_VALUE_REQUIRED%',
 '      return true;',
 '    })',
 '',
 '  }]''',
-'  ,''%SET_VALUE_REQUIRED%'', case when l_set_value_required_yn=''Y'' then q''[$(element).prop("required",true);]'' end);',
+'  ,''%SET_VALUE_REQUIRED%'', case when l_set_value_required_yn=''Y'' then q''[$(element).prop("required",false);]'' end);',
 '  ',
 '  return l_result;',
 'end render;'))
@@ -65,21 +65,21 @@ wwv_flow_api.create_plugin(
 ,p_standard_attributes=>'ITEM:JQUERY_SELECTOR:JAVASCRIPT_EXPRESSION:TRIGGERING_ELEMENT:ONLOAD'
 ,p_substitute_attributes=>true
 ,p_subscribe_plugin_settings=>true
-,p_help_text=>'For APEX Universal Theme. Dynamic Action to show one or more items as Required. Put a condition on the parent Dynamic Action event to make it conditional.'
+,p_help_text=>'For APEX Universal Theme. Dynamic Action to show one or more items as Optional. Put a condition on the parent Dynamic Action event to make it conditional.'
 ,p_version_identifier=>'0.1'
 );
 wwv_flow_api.create_plugin_attribute(
- p_id=>wwv_flow_api.id(13296135964933908)
-,p_plugin_id=>wwv_flow_api.id(13294579433830012)
+ p_id=>wwv_flow_api.id(6652834776583787)
+,p_plugin_id=>wwv_flow_api.id(6652600606583785)
 ,p_attribute_scope=>'COMPONENT'
 ,p_attribute_sequence=>1
 ,p_display_sequence=>10
-,p_prompt=>'Set Value Required = True'
+,p_prompt=>'Set Value Required = False'
 ,p_attribute_type=>'CHECKBOX'
 ,p_is_required=>false
 ,p_default_value=>'N'
 ,p_is_translatable=>false
-,p_help_text=>'Select this to also set the Validation attribute "Value Required" to Yes. Default is to not change the attribute.'
+,p_help_text=>'Select this to also set the Validation attribute "Value Required" to No. Default is to not change the attribute.'
 );
 end;
 /
