@@ -4554,3 +4554,7 @@ readers do not read off random characters that represent icons */
 .fa5s {
   font-family: 'Font Awesome 5 Free';
   font-weight: 900; }
+
+.fa.fa5:before, .fa.fa5:after {<br>
+    font-family: 'Font Awesome 5 Free' !important;<br>
+}
