@@ -220,12 +220,12 @@ begin
     end loop;
 end replace_all;
 
-function renumber (
-    p_lines     in array_type,
+procedure renumber (
+    p_lines_io  in out nocopy array_type,
     p_start_idx in binary_integer := 1,
     p_increment in integer        := 1
-) return array_type is
-    l_out     array_type;
+) is
+    l_temp    array_type;
     l_src_idx binary_integer;
     l_tgt_idx binary_integer;
 begin
@@ -234,12 +234,12 @@ begin
         l_tgt_idx := nvl(p_start_idx, 1);
         loop
             exit when l_src_idx is null;
-            l_out := p_lines(l_src_idx);
+            l_temp := p_lines(l_src_idx);
             l_src_idx := p_lines_io.next(l_src_idx);
             l_tgt_idx := l_tgt_idx + nvl(p_increment,1);
         end loop;
     end if;
-    return l_out;
+    p_lines_io := l_temp;
 end renumber;
 
 procedure remove_multiple_blank_lines (
