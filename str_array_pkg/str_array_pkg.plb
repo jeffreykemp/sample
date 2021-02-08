@@ -234,7 +234,7 @@ begin
         l_tgt_idx := nvl(p_start_idx, 1);
         loop
             exit when l_src_idx is null;
-            l_temp := p_lines(l_src_idx);
+            l_temp(l_tgt_idx) := p_lines(l_src_idx);
             l_src_idx := p_lines_io.next(l_src_idx);
             l_tgt_idx := l_tgt_idx + nvl(p_increment,1);
         end loop;
