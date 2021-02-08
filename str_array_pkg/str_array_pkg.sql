@@ -3,8 +3,6 @@ create package str_array_pkg is
 -- Manipulate ordered array of strings
 --
 -- History :
---
---    MODIFIED   (MM/DD/YYYY)
 --    jkemp      08-Feb-2021   - Created
 ---------------------------------------------------------------------
 
