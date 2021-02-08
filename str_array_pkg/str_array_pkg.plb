@@ -6,8 +6,94 @@ create package body str_array_pkg is
 --    jkemp      08-Feb-2021   - Created
 ---------------------------------------------------------------------
 
+procedure ins (
+    p_lines_io in out nocopy array_type,
+    p_new      in array_type,
+    p_at_idx   in binary_integer
+) is
+    l_index binary_integer;
+    l_row   binary_integer;
+begin
+    if p_new.count > 0 then
+        if p_at_idx is null then
+            raise_application_error(-20000, $$plsql_unit. || '.ins: p_at_idx cannot be null');
+        end if;
+        -- 1. shift all lines from p_at_idx onwards in the target
+        --    (we don't care if the array was already sparse and
+        --    there was enough room anyway)
+        shift (
+            p_lines_io => p_lines_io,
+            p_from_idx => p_at_idx,
+            p_offset   => p_new.count
+        );
+        -- 2. copy lines from p_new into target
+        l_index := p_new.first;
+        l_row   := p_at_idx;
+        loop
+            exit when l_index is null;
+            p_lines_io(l_row) := p_new(l_index);
+            l_row := l_row + 1;
+            l_index := p_new.next(l_index);
+        end loop;
+    end if;
+end ins;
+
+procedure append (
+    p_lines_io in out nocopy array_type,
+    p_new      in array_type
+) is
+    l_index binary_integer;
+    l_row   binary_integer;
+begin
+    if p_new.count > 0 then
+        l_row   := nvl(p_lines_io.last,0)+1;
+        l_index := p_new.first;
+        loop
+            exit when l_index is null;
+            p_lines_io(l_row) := p_new(l_index);
+            l_row := l_row + 1;
+            l_index := p_new.next(l_index);
+        end loop;
+    end if;
+end append;
+
+procedure prepend (
+    p_lines_io in out nocopy array_type,
+    p_new      in array_type
+) is
+    l_index binary_integer;
+    l_row   binary_integer;
+begin
+    if p_new.count > 0 then
+        ins (
+            p_lines_io => p_lines_io,
+            p_new      => p_new,
+            p_at_idx   => nvl(p_lines_io.first, 1)
+        );
+    end if;
+end append;
+
+procedure upd (
+    p_lines_io in out nocopy array_type,
+    p_new      in array_type,
+    p_from_idx in binary_integer,
+    p_to_idx   in binary_integer := null -- default is p_from_idx
+) is
+begin
+    del (
+        p_lines_io => p_lines_io,
+        p_from_idx => p_from_idx,
+        p_to_idx   => nvl(p_to_idx, p_from_idx)
+    );
+    ins (
+        p_lines_io => p_lines_io,
+        p_new      => p_new,
+        p_at_idx   => p_from_idx
+    );
+end upd;
+
 procedure del (
-    p_lines_io in out array_type,
+    p_lines_io in out nocopy array_type,
     p_from_idx in binary_integer := null,
     p_to_idx   in binary_integer := null
 ) is
@@ -28,93 +114,49 @@ begin
     end if;
 end del;
 
-procedure ins (
-    p_lines_io in out array_type,
-    p_new      in array_type,
-    p_at_idx   in binary_integer
+procedure move (
+    p_lines_io in out nocopy array_type,
+    p_src_idx  in binary_integer,
+    p_tgt_idx  in binary_integer
+) is
+begin
+    if p_src_idx is null then
+        raise_application_error(-20000, $$plsql_unit. || '.move: p_src_from_idx cannot be null');
+    end if;
+    if p_tgt_idx is null then
+        raise_application_error(-20000, $$plsql_unit. || '.move: p_tgt_idx cannot be null');
+    end if;
+    if p_lines_io.exists(p_tgt_idx) then
+        raise_application_error(-20000, $$plsql_unit. || '.move: target location has data');
+    end if;
+    p_lines_io(p_tgt_idx) := p_lines_io(p_src_idx);
+    p_lines_io.delete(p_src_idx);
+end move;
+
+procedure shift (
+    p_lines_io in out nocopy array_type,
+    p_from_idx in binary_integer := null, -- default is from start of array
+    p_to_idx   in binary_integer := null, -- default is to end of array
+    p_offset   in binary_integer
 ) is
     l_index binary_integer;
-    l_row   binary_integer;
 begin
-    if p_new.count > 0 then
-        if p_at_idx is null then
-            raise_application_error(-20000, $$plsql_unit. || '.ins: p_at_idx cannot be null');
-        end if;
-        -- 1. shift all lines from p_at_idx onwards in the target
-        --    (we don't care if the array was already sparse and
-        --    there was enough room anyway)
-        l_index := p_lines_io.last;
+    if p_offset > 0 then
+        l_index := nvl(p_to_idx, p_lines_io.last);
         loop
-            exit when l_index is null or l_index < p_at_idx;
-            p_lines_io(l_index + p_new.count) := p_lines_io(l_index);
-            p_lines_io.delete(l_index);
+            exit when l_index is null or l_index < p_from_idx;
+            move(p_lines_io, p_src_idx => l_index, p_tgt_idx => l_index + p_offset);
             l_index := p_lines_io.prior(l_index);
         end loop;
-        -- 2. copy lines from p_new into target
-        l_index := p_new.first;
-        l_row   := p_at_idx;
+    elsif p_offset < 0 then
+        l_index := nvl(p_from_idx, p_lines_io.first);
         loop
-            exit when l_index is null;
-            p_lines_io(l_row) := p_new(l_index);
-            l_row := l_row + 1;
-            l_index := p_new.next(l_index);
+            exit when l_index is null or l_index > p_to_idx;
+            move(p_lines_io, p_src_idx => l_index, p_tgt_idx => l_index + p_offset);
+            l_index := p_lines_io.next(l_index);
         end loop;
     end if;
-end ins;
-
-procedure append (
-    p_lines_io in out array_type,
-    p_new      in array_type
-) is
-    l_index binary_integer;
-    l_row   binary_integer;
-begin
-    if p_new.count > 0 then
-        l_row   := nvl(p_lines_io.last,0)+1;
-        l_index := p_new.first;
-        loop
-            exit when l_index is null;
-            p_lines_io(l_row) := p_new(l_index);
-            l_row := l_row + 1;
-            l_index := p_new.next(l_index);
-        end loop;
-    end if;
-end append;
-
-procedure prepend (
-    p_lines_io in out array_type,
-    p_new      in array_type
-) is
-    l_index binary_integer;
-    l_row   binary_integer;
-begin
-    if p_new.count > 0 then
-        ins (
-            p_lines_io => p_lines_io,
-            p_new      => p_new,
-            p_at_idx   => nvl(p_lines_io.first, 1)
-        );
-    end if;
-end append;
-
-procedure upd (
-    p_lines_io in out array_type,
-    p_new      in array_type,
-    p_from_idx in binary_integer,
-    p_to_idx   in binary_integer := null -- default is p_from_idx
-) is
-begin
-    del (
-        p_lines_io => p_lines_io,
-        p_from_idx => p_from_idx,
-        p_to_idx   => nvl(p_to_idx, p_from_idx)
-    );
-    ins (
-        p_lines_io => p_lines_io,
-        p_new      => p_new,
-        p_at_idx   => p_from_idx
-    );
-end upd;
+end shift;
 
 function slice (
     p_lines            in array_type,
@@ -145,16 +187,38 @@ begin
     return l_lines;
 end slice;
 
+function count_between (
+    p_lines    in array_type,
+    p_from_idx in binary_integer := null,
+    p_to_idx   in binary_integer := null
+) return integer is
+    l_index binary_integer;
+    l_count integer := 0;
+begin
+    if p_from_idx > p_to_idx then
+        raise_application_error(-20000, $$plsql_unit. || '.count_between: p_from_idx must be <= p_to_idx (' || p_from_idx || '..' || p_to_idx || ')');
+    end if;
+    l_index := nvl(p_from_idx, p_lines.first);
+    loop
+        exit when l_index is null or l_index > p_to_idx;
+        l_count := l_count + 1;
+        l_index := p_lines.next(l_index);
+    end loop;
+    return l_count;
+end count_between;
+
 procedure replace_all (
     p_lines_io in out nocopy array_type,
     p_old      in varchar2,
-    p_new      in varchar2
+    p_new      in varchar2,
+    p_from_idx in binary_integer := null,
+    p_to_idx   in binary_integer := null
 ) is
     l_index binary_integer;
 begin
-    l_index := p_lines_io.first;
+    l_index := nvl(p_from_idx, p_lines_io.first);
     loop
-        exit when l_index is null;
+        exit when l_index is null or l_index > p_to_idx;
         p_lines_io(l_index) := replace(p_lines_io(l_index), p_old, p_new);
         l_index := p_lines_io.next(l_index);
     end loop;
@@ -162,42 +226,47 @@ end replace_all;
 
 procedure replace_all (
     p_lines_io in out nocopy array_type,
-    p_str_map  in map_type
+    p_str_map  in map_type,
+    p_from_idx in binary_integer := null,
+    p_to_idx   in binary_integer := null
 ) is
     l_code  varchar2(255);
 begin
     l_code := p_str_map.first;
     loop
         exit when l_code is null;
-        replace_all(p_lines_io, l_code, p_str_map(l_code));
+        replace_all(
+            p_lines_io => p_lines_io,
+            p_old      => l_code,
+            p_new      => p_str_map(l_code)
+            p_from_idx => p_from_idx,
+            p_to_idx   => p_to_idx
+        );
         l_code := p_str_map.next(l_code);
     end loop;
 end replace_all;
 
-procedure remove_gaps (
-    p_lines_io  in out nocopy array_type,
-    p_first_idx in binary_integer := 1
-) is
-    l_index binary_integer;
-    l_row   binary_integer;
+function renumber (
+    p_lines     in array_type,
+    p_start_idx in binary_integer := 1,
+    p_increment in integer        := 1
+) return array_type is
+    l_out     array_type;
+    l_src_idx binary_integer;
+    l_tgt_idx binary_integer;
 begin
     if p_lines_io.count > 0 then
-        if p_lines_io.first < 1 then
-            raise_application_error(-20000, $$plsql_unit. || '.remove_gaps: indices must be >0');
-        end if;
-        l_index := p_lines_io.first;
-        l_row   := p_first_idx;
+        l_src_idx := p_lines_io.first;
+        l_tgt_idx := nvl(p_start_idx, 1);
         loop
-            exit when l_index is null;
-            if l_index > l_row then
-                p_lines_io(l_row) := p_lines_io(l_index);
-                p_lines_io.delete(l_index);
-            end if;
-            l_index := p_lines_io.next(l_index);
-            l_row := l_row + 1;
+            exit when l_src_idx is null;
+            l_out := p_lines(l_src_idx);
+            l_src_idx := p_lines_io.next(l_src_idx);
+            l_tgt_idx := l_tgt_idx + nvl(p_increment,1);
         end loop;
     end if;
-end remove_gaps;
+    return l_out;
+end renumber;
 
 procedure remove_multiple_blank_lines (
     p_lines_io in out nocopy array_type
