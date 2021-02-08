@@ -6,8 +6,8 @@ create package str_array_pkg is
 --    jkemp      08-Feb-2021   - Created
 ---------------------------------------------------------------------
 
-type array_type   is table of varchar2(32767) index by binary_integer;
-type map_type is table of varchar2(32767) index by varchar2(255);
+type array_type is table of varchar2(32767) index by binary_integer;
+type map_type   is table of varchar2(32767) index by varchar2(255);
 
 c_crlf constant varchar2(2) := chr(13) || chr(10);
 
@@ -45,15 +45,6 @@ procedure upd (
     p_new      in array_type,
     p_from_idx in binary_integer,
     p_to_idx   in binary_integer := null -- default is p_from_idx
-);
-
--------------------------------------------------------------------
--- Delete a range of lines from the array
--------------------------------------------------------------------
-procedure del (
-    p_lines_io in out nocopy array_type,
-    p_from_idx in binary_integer := null,
-    p_to_idx   in binary_integer := null
 );
 
 -------------------------------------------------------------------
