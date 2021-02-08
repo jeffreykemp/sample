@@ -116,11 +116,11 @@ procedure replace_all (
 -- Move the array indices according to the new starting index
 -- and increment. May be used to remove gaps.
 -------------------------------------------------------------------
-function renumber (
-    p_lines_io  in array_type,
+procedure renumber (
+    p_lines_io  in out nocopy array_type,
     p_start_idx in binary_integer := 1,
     p_increment in integer        := 1
-) return array_type;
+);
 
 -------------------------------------------------------------------
 -- Compress consecutive blank lines
