@@ -6,34 +6,36 @@ create package str_array_pkg is
 --    jkemp      08-Feb-2021   - Created
 ---------------------------------------------------------------------
 
-type array_type is table of varchar2(32767) index by binary_integer;
-type map_type   is table of varchar2(32767) index by varchar2(255);
+subtype string_max_type is varchar2(32767);
+subtype map_index_type is varchar2(255);
+type array_type is table of string_max_type index by binary_integer;
+type map_type   is table of string_max_type index by map_index_type;
 
-c_crlf constant varchar2(2) := chr(13) || chr(10);
+crlf constant varchar2(2) := chr(13) || chr(10);
 
 -------------------------------------------------------------------
 -- Insert an array into another array at a particular position
 -------------------------------------------------------------------
 procedure ins (
-    p_lines_io in out nocopy array_type,
-    p_new      in array_type,
-    p_at_idx   in binary_integer
+    arr     in out nocopy array_type,
+    new_arr in array_type,
+    at_idx  in binary_integer
 );
 
 -------------------------------------------------------------------
 -- Insert all elements of the array on the end of the first
 -------------------------------------------------------------------
 procedure append (
-    p_lines_io in out nocopy array_type,
-    p_new      in array_type
+    arr     in out nocopy array_type,
+    new_arr in array_type
 );
 
 -------------------------------------------------------------------
 -- Insert all elements of the array at the start of the first
 -------------------------------------------------------------------
 procedure prepend (
-    p_lines_io in out nocopy array_type,
-    p_new      in array_type
+    arr     in out nocopy array_type,
+    new_arr in array_type
 );
 
 -------------------------------------------------------------------
@@ -41,10 +43,10 @@ procedure prepend (
 -- given range
 -------------------------------------------------------------------
 procedure upd (
-    p_lines_io in out nocopy array_type,
-    p_new      in array_type,
-    p_from_idx in binary_integer,
-    p_to_idx   in binary_integer := null -- default is p_from_idx
+    arr      in out nocopy array_type,
+    new_arr  in array_type,
+    from_idx in binary_integer,
+    to_idx   in binary_integer := null -- default is from_idx
 );
 
 -------------------------------------------------------------------
@@ -52,64 +54,64 @@ procedure upd (
 -- Raises exception if the target location already has data.
 -------------------------------------------------------------------
 procedure move (
-    p_lines_io in out nocopy array_type,
-    p_src_idx  in binary_integer,
-    p_tgt_idx  in binary_integer
+    arr     in out nocopy array_type,
+    src_idx in binary_integer,
+    tgt_idx in binary_integer
 );
 
 -------------------------------------------------------------------
 -- Shift all strings between the given range by the given offset
--- Does nothing if p_offset is null or zero
+-- Does nothing if offset is null or zero
 -------------------------------------------------------------------
 procedure shift (
-    p_lines_io in out nocopy array_type,
-    p_from_idx in binary_integer := null, -- default is from start of array
-    p_to_idx   in binary_integer := null, -- default is to end of array
-    p_offset   in binary_integer
+    arr      in out nocopy array_type,
+    from_idx in binary_integer := null, -- default is from start of array
+    to_idx   in binary_integer := null, -- default is to end of array
+    offset   in binary_integer
 );
 
 -------------------------------------------------------------------
 -- Get a range of strings from within an array
--- If p_preserve_indices = true, the array indices are preserved
--- If p_preserve_indices = false, the array indices will start from
--- 1 (or p_first_idx) up to number of lines.
+-- If preserve_indices = true, the array indices are preserved
+-- If preserve_indices = false, the array indices will start from
+-- 1 (or first_idx) up to number of lines.
 -------------------------------------------------------------------
 function slice (
-    p_lines            in array_type,
-    p_from_idx         in binary_integer := null,
-    p_to_idx           in binary_integer := null,
-    p_preserve_indices in boolean        := true
-    p_first_idx        in binary_integer := 1
+    arr              in array_type,
+    from_idx         in binary_integer := null,
+    to_idx           in binary_integer := null,
+    preserve_indices in boolean        := true
+    first_idx        in binary_integer := 1
 ) return array_type;
 
 -------------------------------------------------------------------
 -- Count the number of lines between the given indices (inclusive)
 -------------------------------------------------------------------
 function count_between (
-    p_lines    in array_type,
-    p_from_idx in binary_integer := null,
-    p_to_idx   in binary_integer := null
+    arr      in array_type,
+    from_idx in binary_integer := null,
+    to_idx   in binary_integer := null
 ) return integer;
 
 -------------------------------------------------------------------
 -- Perform the substitution on all the lines in the array
 -------------------------------------------------------------------
 procedure replace_all (
-    p_lines_io in out nocopy array_type,
-    p_old      in varchar2,
-    p_new      in varchar2,
-    p_from_idx in binary_integer := null,
-    p_to_idx   in binary_integer := null
+    arr      in out nocopy array_type,
+    old_str  in varchar2,
+    new_str  in varchar2,
+    from_idx in binary_integer := null,
+    to_idx   in binary_integer := null
 );
 
 -------------------------------------------------------------------
 -- Perform the substitutions on all the lines in the array
 -------------------------------------------------------------------
 procedure replace_all (
-    p_lines_io in out nocopy array_type,
-    p_str_map  in map_type,
-    p_from_idx in binary_integer := null,
-    p_to_idx   in binary_integer := null
+    arr      in out nocopy array_type,
+    str_map  in map_type,
+    from_idx in binary_integer := null,
+    to_idx   in binary_integer := null
 );
 
 -------------------------------------------------------------------
@@ -117,53 +119,53 @@ procedure replace_all (
 -- and increment. May be used to remove gaps.
 -------------------------------------------------------------------
 procedure renumber (
-    p_lines_io  in out nocopy array_type,
-    p_start_idx in binary_integer := 1,
-    p_increment in integer        := 1
+    arr       in out nocopy array_type,
+    start_idx in binary_integer := 1,
+    increment in integer        := 1
 );
 
 -------------------------------------------------------------------
 -- Compress consecutive blank lines
 -------------------------------------------------------------------
 procedure remove_multiple_blank_lines (
-    p_lines_io in out nocopy array_type
+    arr in out nocopy array_type
 );
 
 -------------------------------------------------------------------
--- Find the next occurrence of a token in the given array.
+-- Find the next occurrence of something in the given array.
 -- Returns the index into the array.
--- Search can be for a single token, any token in a list of tokens,
--- or an expression.
+-- Search can be for a single string, any string in a list of
+-- strings, or an expression.
 -------------------------------------------------------------------
 function find_next (
-    p_lines     in array_type,
-    p_token     in varchar2        := null,
-    p_tokens    in apex_t_varchar2 := apex_t_varchar2(),
-    p_like      in varchar2        := null,
-    p_regexp    in varchar2        := null,
-    p_after_idx in binary_integer  := null
+    arr          in array_type,
+    contains     in varchar2        := null,
+    contains_any in apex_t_varchar2 := apex_t_varchar2(),
+    like_str     in varchar2        := null,
+    regexp       in varchar2        := null,
+    after_idx    in binary_integer  := null
 ) return binary_integer;
 
 -------------------------------------------------------------------
 -- Combine the array of lines into a clob
 -------------------------------------------------------------------
 function to_clob (
-    p_lines       in array_type,
-    p_line_ending in varchar2 := c_crlf
+    arr         in array_type,
+    line_ending in varchar2 := crlf
 ) return clob;
 
 -------------------------------------------------------------------
 -- Split the clob into lines
 -- Similar to apex_string.split(2)
--- Maximum line length is p_max_length (<=32767); if a
+-- Maximum line length is max_length (<=32767); if a
 -- line is longer than the max, it will be split up.
--- If p_line_ending is null, splits the clob into fixed-length
+-- If line_ending is null, splits the clob into fixed-length
 -- lines.
 -------------------------------------------------------------------
 function from_clob (
-    p_clob        in clob,
-    p_line_ending in varchar2 := c_crlf,
-    p_max_length  in integer := 32767
+    content     in clob,
+    line_ending in varchar2 := crlf,
+    max_length  in integer := 32767
 ) return array_type;
 
 end str_array_pkg;
