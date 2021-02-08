@@ -64,7 +64,7 @@ procedure move (
 -- Does nothing if offset is null or zero
 -------------------------------------------------------------------
 procedure shift (
-    arr      in out nocopy array_type,
+    arr      in out array_type,
     from_idx in binary_integer := null, -- default is from start of array
     to_idx   in binary_integer := null, -- default is to end of array
     offset   in binary_integer
