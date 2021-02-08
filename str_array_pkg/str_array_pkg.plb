@@ -80,39 +80,13 @@ procedure upd (
     p_to_idx   in binary_integer := null -- default is p_from_idx
 ) is
 begin
-    del (
-        p_lines_io => p_lines_io,
-        p_from_idx => p_from_idx,
-        p_to_idx   => nvl(p_to_idx, p_from_idx)
-    );
+    p_lines_io.delete(p_from_idx,nvl(p_to_idx, p_from_idx));
     ins (
         p_lines_io => p_lines_io,
         p_new      => p_new,
         p_at_idx   => p_from_idx
     );
 end upd;
-
-procedure del (
-    p_lines_io in out nocopy array_type,
-    p_from_idx in binary_integer := null,
-    p_to_idx   in binary_integer := null
-) is
-    l_index binary_integer;
-begin
-    if p_from_idx > p_to_idx then
-        raise_application_error(-20000, $$plsql_unit. || '.del: p_from_idx must be <= p_to_idx (' || p_from_idx || '..' || p_to_idx || ')');
-    end if;
-    if p_from_idx is null and p_to_idx is null then
-        p_lines_io.delete;
-    else
-        l_index := nvl(p_from_idx, p_lines_io.first);
-        loop
-            exit when l_index is null or l_index > p_to_idx;
-            p_lines_io.delete(l_index);
-            l_index := p_lines_io.next(l_index);
-        end loop;
-    end if;
-end del;
 
 procedure move (
     p_lines_io in out nocopy array_type,
