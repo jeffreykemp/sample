@@ -146,15 +146,17 @@ begin
     if from_idx > to_idx then
         raise_application_error(-20000, $$plsql_unit. || '.slice: from_idx must be <= to_idx (' || from_idx || '..' || to_idx || ')');
     end if;
-    l_index := nvl(from_idx, arr.first);
+    l_index := arr.first;
     loop
         exit when l_index is null or l_index > to_idx;
-        if preserve_indices then
-            l_tgt_idx := l_index;
-        end if;
-        l_lines(l_tgt_idx) := arr(l_index);
-        if not preserve_indices then
-            l_tgt_idx := l_tgt_idx + 1;
+        if l_index >= from_idx or from_idx is null then
+            if preserve_indices then
+                l_tgt_idx := l_index;
+            end if;
+            l_lines(l_tgt_idx) := arr(l_index);
+            if not preserve_indices then
+                l_tgt_idx := l_tgt_idx + 1;
+            end if;
         end if;
         l_index := arr.next(l_index);
     end loop;
