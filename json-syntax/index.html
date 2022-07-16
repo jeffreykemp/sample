@@ -1,0 +1,360 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+   
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      
+      
+      <meta name="generator" content="Railroad Diagram Generator 1.63">
+      
+      <style type="text/css">
+    ::-moz-selection
+    {
+      color: #FFFCF0;
+      background: #0F0C00;
+    }
+    ::selection
+    {
+      color: #FFFCF0;
+      background: #0F0C00;
+    }
+    .ebnf a, .grammar a
+    {
+      text-decoration: none;
+    }
+    .ebnf a:hover, .grammar a:hover
+    {
+      color: #050400;
+      text-decoration: underline;
+    }
+    .signature
+    {
+      color: #806600;
+      font-size: 11px;
+      text-align: right;
+    }
+    body
+    {
+      font: normal 12px Verdana, sans-serif;
+      color: #0F0C00;
+      background: #FFFCF0;
+    }
+    a:link, a:visited
+    {
+      color: #0F0C00;
+    }
+    a:link.signature, a:visited.signature
+    {
+      color: #806600;
+    }
+    a.button, #tabs li a
+    {
+      padding: 0.25em 0.5em;
+      border: 1px solid #806600;
+      background: #F1E8C6;
+      color: #806600;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    a.button:hover, #tabs li a:hover
+    {
+      color: #050400;
+      background: #FFF6D1;
+      border-color: #050400;
+    }
+    #tabs
+    {
+      padding: 3px 10px;
+      margin-left: 0;
+      margin-top: 58px;
+      border-bottom: 1px solid #0F0C00;
+    }
+    #tabs li
+    {
+      list-style: none;
+      margin-left: 5px;
+      display: inline;
+    }
+    #tabs li a
+    {
+      border-bottom: 1px solid #0F0C00;
+    }
+    #tabs li a.active
+    {
+      color: #0F0C00;
+      background: #FFFCF0;
+      border-color: #0F0C00;
+      border-bottom: 1px solid #FFFCF0;
+      outline: none;
+    }
+    #divs div
+    {
+      display: none;
+      overflow:auto;
+    }
+    #divs div.active
+    {
+      display: block;
+    }
+    #text
+    {
+      border-color: #806600;
+      background: #FFFEFA;
+      color: #050400;
+    }
+    .small
+    {
+      vertical-align: top;
+      text-align: right;
+      font-size: 9px;
+      font-weight: normal;
+      line-height: 120%;
+    }
+    td.small
+    {
+      padding-top: 0px;
+    }
+    .hidden
+    {
+      visibility: hidden;
+    }
+    td:hover .hidden
+    {
+      visibility: visible;
+    }
+    div.download
+    {
+      display: none;
+      background: #FFFCF0;
+      position: absolute;
+      right: 34px;
+      top: 94px;
+      padding: 10px;
+      border: 1px dotted #0F0C00;
+    }
+    #divs div.ebnf, .ebnf code
+    {
+      display: block;
+      padding: 10px;
+      background: #FFF6D1;
+      width: 992px;
+    }
+    #divs div.grammar
+    {
+      display: block;
+      padding-left: 16px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      background: #FFF6D1;
+    }
+    pre
+    {
+      margin: 0px;
+    }
+    .ebnf div
+    {
+      padding-left: 13ch;
+      text-indent: -13ch;
+    }
+    .ebnf code, .grammar code, textarea, pre
+    {
+      font:12px SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+    }
+    tr.option-line td:first-child
+    {
+      text-align: right
+    }
+    tr.option-text td
+    {
+      padding-bottom: 10px
+    }
+    table.palette
+    {
+      border-top: 1px solid #050400;
+      border-right: 1px solid #050400;
+      margin-bottom: 4px
+    }
+    td.palette
+    {
+      border-bottom: 1px solid #050400;
+      border-left: 1px solid #050400;
+    }
+    a.palette
+    {
+      padding: 2px 3px 2px 10px;
+      text-decoration: none;
+    }
+    .palette
+    {
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -o-user-select: none;
+      -ms-user-select: none;
+    }
+  </style>
+   </head>
+   
+   <body>
+      
+      <p style="font-size: 14px; font-weight:bold"><a name="json">json:</a></p><img border="0" src="diagram/json.png" height="81" width="157" usemap="#json.map"><map name="json.map"><area shape="rect" coords="49,1,107,33" href="#object" title="object"><area shape="rect" coords="49,45,101,77" href="#array" title="array"></map><p>
+         
+         <div class="ebnf"><code>
+               
+               <div><a href="#json" title="json">json</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::= <a href="#object" title="object">object</a></div>
+               
+               <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a href="#array" title="array">array</a></div></code></div>
+         </p>
+      
+      <p>no references</p><br><p style="font-size: 14px; font-weight:bold"><a name="object">object:</a></p><img border="0" src="diagram/object.png" height="81" width="267" usemap="#object.map"><map name="object.map"><area shape="rect" coords="97,45,169,77" href="#member" title="member"></map><p>
+         
+         <div class="ebnf"><code>
+               
+               <div><a href="#object" title="object">object</a>&nbsp;&nbsp;&nbsp;::= '{' <a href="#member" title="member">member</a> ( ',' <a href="#member" title="member">member</a> )* '}'</div></code></div>
+         </p>
+      
+      <p>referenced by:
+         
+         <ul>
+            
+            <li><a href="#element" title="element">element</a></li>
+            
+            <li><a href="#json" title="json">json</a></li>
+            </ul>
+         </p><br><p style="font-size: 14px; font-weight:bold"><a name="array">array:</a></p><img border="0" src="diagram/array.png" height="81" width="263" usemap="#array.map"><map name="array.map"><area shape="rect" coords="95,45,167,77" href="#element" title="element"></map><p>
+         
+         <div class="ebnf"><code>
+               
+               <div><a href="#array" title="array">array</a>&nbsp;&nbsp;&nbsp;&nbsp;::= '[' <a href="#element" title="element">element</a> ( ',' <a href="#element" title="element">element</a> )* ']'</div></code></div>
+         </p>
+      
+      <p>referenced by:
+         
+         <ul>
+            
+            <li><a href="#element" title="element">element</a></li>
+            
+            <li><a href="#json" title="json">json</a></li>
+            </ul>
+         </p><br><p style="font-size: 14px; font-weight:bold"><a name="member">member:</a></p><img border="0" src="diagram/member.png" height="37" width="251" usemap="#member.map"><map name="member.map"><area shape="rect" coords="29,1,85,33" href="#string" title="string"><area shape="rect" coords="149,1,221,33" href="#element" title="element"></map><p>
+         
+         <div class="ebnf"><code>
+               
+               <div><a href="#member" title="member">member</a>&nbsp;&nbsp;&nbsp;::= <a href="#string" title="string">string</a> ':' <a href="#element" title="element">element</a></div></code></div>
+         </p>
+      
+      <p>referenced by:
+         
+         <ul>
+            
+            <li><a href="#object" title="object">object</a></li>
+            </ul>
+         </p><br><p style="font-size: 14px; font-weight:bold"><a name="element">element:</a></p><img border="0" src="diagram/element.png" height="301" width="167" usemap="#element.map"><map name="element.map"><area shape="rect" coords="49,1,105,33" href="#string" title="string"><area shape="rect" coords="49,45,117,77" href="#number" title="number"><area shape="rect" coords="49,89,107,121" href="#object" title="object"><area shape="rect" coords="49,133,101,165" href="#array" title="array"></map><p>
+         
+         <div class="ebnf"><code>
+               
+               <div><a href="#element" title="element">element</a>&nbsp;&nbsp;::= <a href="#string" title="string">string</a></div>
+               
+               <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a href="#number" title="number">number</a></div>
+               
+               <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a href="#object" title="object">object</a></div>
+               
+               <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a href="#array" title="array">array</a></div>
+               
+               <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 'true'</div>
+               
+               <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 'false'</div>
+               
+               <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 'null'</div></code></div>
+         </p>
+      
+      <p>referenced by:
+         
+         <ul>
+            
+            <li><a href="#array" title="array">array</a></li>
+            
+            <li><a href="#member" title="member">member</a></li>
+            </ul>
+         </p><br><p style="font-size: 14px; font-weight:bold"><a name="string">string:</a></p><img border="0" src="diagram/string.png" height="113" width="335" usemap="#string.map"><map name="string.map"><area shape="rect" coords="135,61,199,93" href="#escape" title="escape"></map><p>
+         
+         <div class="ebnf"><code>
+               
+               <div><a href="#string" title="string">string</a>&nbsp;&nbsp;&nbsp;::= '"' ( [^"\] | <a href="#escape" title="escape">escape</a> )* '"'</div>
+               
+               <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* ws: explicit */</div></code></div>
+         </p>
+      
+      <p>referenced by:
+         
+         <ul>
+            
+            <li><a href="#element" title="element">element</a></li>
+            
+            <li><a href="#member" title="member">member</a></li>
+            </ul>
+         </p><br><p style="font-size: 14px; font-weight:bold"><a name="escape">escape:</a></p><img border="0" src="diagram/escape.png" height="389" width="423" usemap="#escape.map"><map name="escape.map"><area shape="rect" coords="145,353,187,385" href="#hex" title="hex"><area shape="rect" coords="207,353,249,385" href="#hex" title="hex"><area shape="rect" coords="269,353,311,385" href="#hex" title="hex"><area shape="rect" coords="331,353,373,385" href="#hex" title="hex"></map><p>
+         
+         <div class="ebnf"><code>
+               
+               <div><a href="#escape" title="escape">escape</a>&nbsp;&nbsp;&nbsp;::= '\' ( ["\/bnfrt] | 'u' <a href="#hex" title="hex">hex</a> <a href="#hex" title="hex">hex</a> <a href="#hex" title="hex">hex</a> <a href="#hex" title="hex">hex</a> )</div>
+               
+               <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* ws: explicit */</div></code></div>
+         </p>
+      
+      <p>referenced by:
+         
+         <ul>
+            
+            <li><a href="#string" title="string">string</a></li>
+            </ul>
+         </p><br><p style="font-size: 14px; font-weight:bold"><a name="hex">hex:</a></p><img border="0" src="diagram/hex.png" height="125" width="161"><p>
+         
+         <div class="ebnf"><code>
+               
+               <div><a href="#hex" title="hex">hex</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::= [0-9A-Fa-f]</div></code></div>
+         </p>
+      
+      <p>referenced by:
+         
+         <ul>
+            
+            <li><a href="#escape" title="escape">escape</a></li>
+            </ul>
+         </p><br><p style="font-size: 14px; font-weight:bold"><a name="number">number:</a></p><img border="0" src="diagram/number.png" height="163" width="915"><p>
+         
+         <div class="ebnf"><code>
+               
+               <div><a href="#number" title="number">number</a>&nbsp;&nbsp;&nbsp;::= '-'? ( [1-9] [0-9]* | '0' ) ( '.' [0-9]+ )? ( [eE] [-+]? [0-9]+ )?</div>
+               
+               <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* ws: explicit */</div></code></div>
+         </p>
+      
+      <p>referenced by:
+         
+         <ul>
+            
+            <li><a href="#element" title="element">element</a></li>
+            </ul>
+         </p><br><hr>
+      
+      <p>
+         
+         <table border="0" class="signature">
+            
+            <tr>
+               
+               <td style="width: 100%">&nbsp;</td>
+               
+               <td valign="top">
+                  
+                  <nobr class="signature">... generated by <a name="Railroad-Diagram-Generator" class="signature" title="https://www.bottlecaps.de/rr/ui" href="https://www.bottlecaps.de/rr/ui" target="_blank">RR - Railroad Diagram Generator</a></nobr>
+                  </td>
+               
+               <td><a name="Railroad-Diagram-Generator" title="https://www.bottlecaps.de/rr/ui" href="https://www.bottlecaps.de/rr/ui" target="_blank"><img border="0" src="diagram/rr-1.63.png" height="16" width="16"></a></td>
+               </tr>
+            </table>
+         </p>
+      </body>
+   </html>
