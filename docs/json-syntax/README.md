@@ -1,1 +1,2 @@
-[JSON Syntax diagram](https://jeffreykemp.github.io/sample/json-syntax/)
+* [JSON Syntax diagram](diagram.html)
+* [EBNF Syntax](json.ebnf)
