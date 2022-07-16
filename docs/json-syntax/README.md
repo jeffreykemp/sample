@@ -24,7 +24,7 @@ string ::= '"' ( [^"\] | escape )* '"'                                          
 
 escape ::= '\' ( ["\/bnfrt] | 'u' hex hex hex hex )                                /* ws: explicit */
 
-hex ::= [0-9A-Fa-f]
+hex ::= [0-9A-Fa-f]                                                                /* ws: explicit */
 
 number ::= '-'? ( [1-9] [0-9]* | '0' ) ( '.' [0-9]+ )? ( [eE] [-+]? [0-9]+ )?      /* ws: explicit */
 ```
