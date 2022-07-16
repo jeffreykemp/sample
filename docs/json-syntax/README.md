@@ -1,1 +1,1 @@
-[JSON Syntax diagram](json-syntax/)
+[JSON Syntax diagram](index.html)
