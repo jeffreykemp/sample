@@ -1,1 +1,1 @@
-[JSON Syntax](json-syntax/)
+* [JSON Syntax](json-syntax/)
