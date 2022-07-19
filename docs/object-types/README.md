@@ -12,12 +12,12 @@ All source code below may be downloaded to be executed as a single script:
 
     create or replace type base_t force as object (
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- common data element used by any subtype
         data_type varchar2(128),
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Return this value as a string.
         -- Not instantiable - i.e. behaviour is not defined by base type;
         -- every subtype (that is instantiable) MUST define this function
@@ -25,20 +25,20 @@ All source code below may be downloaded to be executed as a single script:
             return varchar2,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Return true if this value is null.
         not instantiable member function is_null
             return boolean,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Return a description of the value as a string, e.g. for debug log.
         -- (may optionally be overridden by a subtype)
         member function object_info
             return varchar2,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- ORDER function defines how two values may be compared
         --
         -- Should return 0 if they are "equal"
@@ -53,14 +53,15 @@ All source code below may be downloaded to be executed as a single script:
         ) return integer,
 
 
-        ---------------------------------------------------------------------------
-        -- function to implement the comparison - MUST be defined by every subtype
+        --------------------------------------------------------------------------
+        -- function to implement the comparison - MUST be defined by every
+        -- subtype
         not instantiable member function compare_implementation (
             p_other in base_t
         ) return integer,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- function to "add" something to something
         not instantiable member procedure add_ (
             p_value in base_t
@@ -79,15 +80,16 @@ UNDER: inherits everything from base_t
 
     create or replace type string_t force under base_t (
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- data element specific to this type
         string_value varchar2(32767),
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- constructor to build a value of this type
         --
-        -- Since the parameter is optional, we can create "empty" values of this type
+        -- Since the parameter is optional, we can create "empty" values of this
+        -- type
         --
         -- Example:
         --
@@ -98,24 +100,24 @@ UNDER: inherits everything from base_t
         ) return self as result,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function to_string
             return varchar2,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Return true if this value is null.
         overriding member function is_null
             return boolean,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function compare_implementation (
             p_other in base_t
         ) return integer,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- concatenate something to the string
         --
         -- Example:
@@ -135,34 +137,34 @@ UNDER: inherits everything from base_t
 
     create or replace type number_t force under base_t (
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         number_value number,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         constructor function number_t (
             p_number in number := null
         ) return self as result,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function to_string
             return varchar2,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Return true if this value is null.
         overriding member function is_null
             return boolean,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function compare_implementation (
             p_other in base_t
         ) return integer,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- modify the number by adding the given value
         --
         -- Example:
@@ -182,11 +184,11 @@ UNDER: inherits everything from base_t
 
     create or replace type date_t force under base_t (
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         date_value date,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Construct a date value
         --
         -- Examples:
@@ -202,7 +204,7 @@ UNDER: inherits everything from base_t
         ) return self as result,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Convert a string to a date value
         --
         -- Example:
@@ -215,9 +217,10 @@ UNDER: inherits everything from base_t
         ) return self as result,
 
 
-        ---------------------------------------------------------------------------
-        -- A static method is somewhat like a package method, it doesn't relate to
-        -- any particular instance of the object type - useful for helper methods.
+        --------------------------------------------------------------------------
+        -- A static method is somewhat like a package method, it doesn't relate
+        -- to any particular instance of the object type - useful for helper
+        -- methods.
         --
         -- Example:
         --
@@ -228,35 +231,35 @@ UNDER: inherits everything from base_t
         --     );
         --
         -- Note that when you want to call a method on an object that has been
-        -- returned by a type function, you must include () even if the function has
-        -- no parameters.
+        -- returned by a type function, you must include () even if the function
+        -- has no parameters.
         --
         static function today return date_t,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function to_string
             return varchar2,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Return true if this value is null.
         overriding member function is_null
             return boolean,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         member function to_date
             return date,        
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function compare_implementation (
             p_other in base_t
         ) return integer,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- modify the date by the given offset (in number of days)
         --
         -- Example:
@@ -285,11 +288,11 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
 
     create or replace type array_t force under base_t (
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         array_value base_tab_t,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Construct an array value
         --
         -- Examples:
@@ -311,42 +314,42 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         ) return self as result,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function to_string
             return varchar2,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Return true if this value is null.
         overriding member function is_null
             return boolean,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Return the count of elements in this array
         member function count return integer,
 
 
-        ---------------------------------------------------------------------------
-        -- Return the count of all non-null elements; if any element is itself an
-        -- array, count the non-null values inside that array (but don't count the
-        -- array itself in the total) - recursively
+        --------------------------------------------------------------------------
+        -- Return the count of all non-null elements; if any element is itself
+        -- an array, count the non-null values inside that array (but don't count
+        -- the array itself in the total) - recursively
         member function count_deep return integer,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Get the value at the given index
         -- Raises NO_DATA_FOUND if the index doesn't exist in the array
         member function get (p_index in binary_integer) return base_t,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function compare_implementation (
             p_other in base_t
         ) return integer,
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- append an element to the array
         --
         -- Example:
@@ -370,7 +373,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         -- methods that are not instantiable since they will be defined
         -- differently for each child type.
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         member function object_info
             return varchar2 is
         begin
@@ -390,7 +393,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Compare two values - any two values that are descended from base_t.
         --
         -- Note that I choose to put as much of the complexity in the base type
@@ -464,7 +467,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
 
     create or replace type body string_t as
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         constructor function string_t (
             p_string in varchar2 := null
         ) return self as result is
@@ -478,7 +481,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function to_string
             return varchar2 is
         begin    
@@ -486,7 +489,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function is_null
             return boolean is
         begin
@@ -494,7 +497,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- we've decided to allow the default compare function deal with string
         -- comparisons
         overriding member function compare_implementation (
@@ -505,7 +508,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- concatenate something to the string
         overriding member procedure add_ (
             p_value in base_t
@@ -521,7 +524,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
 
     create or replace type body number_t as
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         constructor function number_t (
             p_number in number := null
         ) return self as result is
@@ -534,7 +537,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function to_string
             return varchar2 is
         begin
@@ -544,7 +547,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function is_null
             return boolean is
         begin
@@ -552,7 +555,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function compare_implementation (
             p_other in base_t
         ) return integer is
@@ -581,7 +584,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- concatenate something to the string
         overriding member procedure add_ (
             p_value in base_t
@@ -590,8 +593,8 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
 
             if p_value is of (number_t) then
 
-                -- since p_value is a base_t, in order to access something defined
-                -- by a number_t we have to use TREAT(x as y)
+                -- since p_value is a base_t, in order to access something
+                -- defined by a number_t we have to use TREAT(x as y)
 
                 number_value := number_value
                               + treat(p_value as number_t).number_value;
@@ -613,7 +616,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
 
     create or replace type body date_t as
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         constructor function date_t (
             p_date in date := null
         ) return self as result is
@@ -626,7 +629,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         constructor function date_t (
             p_string in varchar2,
             p_format in varchar2 := 'YYYY-MM-DD'
@@ -640,14 +643,14 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         static function today return date_t is
         begin
             return date_t( p_date => current_date );
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function to_string
             return varchar2 is
         begin
@@ -655,7 +658,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function is_null
             return boolean is
         begin
@@ -663,7 +666,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         member function to_date
             return date is
         begin   
@@ -671,7 +674,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function compare_implementation (
             p_other in base_t
         ) return integer is
@@ -700,7 +703,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- concatenate something to the string
         overriding member procedure add_ (
             p_value in base_t
@@ -729,7 +732,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
 
     create or replace type body array_t as
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         constructor function array_t (
             p_array in base_tab_t := null
         ) return self as result is
@@ -742,7 +745,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function to_string
             return varchar2 is
             l_result varchar2(32767);
@@ -766,7 +769,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function is_null
             return boolean is
         begin
@@ -774,7 +777,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Return the count of elements in this array
         member function count return integer is
         begin
@@ -782,10 +785,10 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Return the count of all non-null elements; if any element is itself an
-        -- array, count the non-null values inside that array (but don't count the
-        -- array itself in the total) - recursively
+        -- array, count the non-null values inside that array (but don't count
+        -- the array itself in the total) - recursively
         member function count_deep return integer is
             l_result integer := 0;
         begin
@@ -795,7 +798,8 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
                 if array_value(i) is not null then
 
                     if array_value(i) is of (array_t) then
-                        l_result := l_result + treat(array_value(i) as array_t).count_deep;
+                        l_result := l_result
+                                  + treat(array_value(i) as array_t).count_deep;
                     else
                         l_result := l_result + 1;
                     end if;
@@ -808,7 +812,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- Get the value at the given index
         member function get (p_index in binary_integer) return base_t is
         begin
@@ -816,7 +820,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         overriding member function compare_implementation (
             p_other in base_t
         ) return integer is
@@ -826,8 +830,8 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
 
             if p_other is of (array_t) then
 
-                -- perform a value-by-value comparison until a difference is found
-                -- in corresponding values in the two arrays
+                -- perform a value-by-value comparison until a difference is
+                -- found in corresponding values in the two arrays
 
                 l_index := 1;
                 <<compare_loop>>
@@ -842,13 +846,16 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
                             l_value1 := array_value(l_index);
                         end if;
 
-                        if treat(p_other as array_t).array_value.exists(l_index) then
-                            l_value2 := treat(p_other as array_t).array_value(l_index);
+                        if treat(p_other as array_t).array_value.exists(l_index)
+                        then
+                            l_value2 := treat(p_other as array_t)
+                                        .array_value(l_index);
                         end if;
 
                         if l_value1 is null and l_value2 is null then
 
-                            -- we've come to the end of the arrays and found no difference
+                            -- we've come to the end of the arrays and found no
+                            -- difference
                             l_result := 0;
 
                         elsif l_value1 is not null and l_value2 is null then
@@ -863,17 +870,20 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
 
                         elsif l_value1 > l_value2 then
 
-                            -- the value here is greater than the value in the other array
+                            -- the value here is greater than the value in the
+                            -- other array
                             l_result := 1;
 
                         elsif l_value1 < l_value2 then
 
-                            -- the value in the other array is greater than this value
+                            -- the value in the other array is greater
+                            -- than this value
                             l_result := -1;
 
                         else
 
-                            -- the values are identical up to this point; continue looping
+                            -- the values are identical up to this point;
+                            -- continue looping
                             null;
 
                         end if;
@@ -891,7 +901,7 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
         end;
 
 
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
         -- append something to the array
         overriding member procedure add_ (
             p_value in base_t
