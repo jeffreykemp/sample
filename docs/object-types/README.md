@@ -1,6 +1,6 @@
 # Example SQL Object Types
 
-How to use SQL object types to build a hierarchical data type system purpose-built for a custom purpose.
+How to use SQL object types to build a purpose-built hierarchical data type system.
 
 This is just for illustrative / educational purposes.
 
