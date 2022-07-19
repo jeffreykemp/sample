@@ -4,6 +4,10 @@ How to use SQL object types to build a hierarchical data type system purpose-bui
 
 This is just for illustrative / educational purposes.
 
+All source code below may be downloaded to be executed as a single script:
+
+* **[object-types.sql](object-types.sql)**
+
 ## Base (prototype) type for our object type hierarchy
 
     create or replace type base_t force as object (
@@ -1104,6 +1108,8 @@ We can even have arrays of arrays, which themselves can be arrays of any of thes
     end;
     /
 
-=====
+-----
 
-**[object-types.sql](object-types.sql)**
+## Further Reading
+
+* [Oracle Database Object-Relational Developer's Guide](https://docs.oracle.com/en/database/oracle/oracle-database/21/adobj/index.html)
